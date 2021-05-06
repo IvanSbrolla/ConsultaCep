@@ -9,6 +9,7 @@
     <script src="https://kit.fontawesome.com/30c4adbfaf.js" crossorigin="anonymous"></script>
     <link rel="shortcut icon" href="~/favicon.ico">
     <link rel="stylesheet" href="Styles.css">
+    <script src="node_modules/jquery/dist/jquery.js"></script>
 </head>
 <body>
     <nav>
@@ -22,16 +23,57 @@
                 <div class="Flex Flex-Column Flex-Center">
                     <i Icon-Localizacao class="fas fa-map-marker-alt fa-7x"></i>
                     <div box-Input-Button class="Flex Flex-Row">
-                        <input type="number" placeholder="Insira o CEP">
-                        <button class="button" type="submit" value="Consultar"> Consultar <i class="fas fa-search"></i></button>
+                        <input id="txtCep" type="number" placeholder="Insira o CEP">
+                        <button id="btnConsultarCep" class="button" type="submit" value="Consultar"> Consultar <i class="fas fa-search"></i></button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-    <footer class="Flex Flex-Row Flex-Center">
+    <div id="boxTable" class="boxTable Flex Flex-Center">
+        <table id="tableResult" class="table">
+            
+        </table>
+    </div>  
+    <footer id='footer' class="Flex Flex-Row Flex-Center">
         <a><i icon-margin class="fab fa-github fa-6x"></i></a>
         <a><i class="fab fa-instagram fa-6x"></i></a>
     </footer>
 </body>
+<script>
+    
+    $('#btnConsultarCep').on('click',(e) => {
+        e.preventDefault()
+        $.ajax({
+            url:'/ConsultCep',
+            data:{
+                cep: $('#txtCep').val()
+            },
+            method:'GET',
+            contentType:'application/json',
+            success: function(response){
+                document.getElementById("footer").style.position = 'relative';
+
+                $('#boxTable').show();
+                $('#boxTable').css('display','flex')
+
+                $.each(response,function(key,item){
+                    $('#tableResult').append(
+                        `<tr tr-styles>
+                            <td>
+                                <label class="labelTable">${key.toString().toUpperCase()}</label>
+                            </td>
+                            <td>
+                                <label class="labelTable">${item}</label>
+                            </td>
+                        </tr>`)
+                })
+                
+            },
+            error:function(response){
+                console.log(response)
+            }
+        })
+    })  
+</script>
 </html>

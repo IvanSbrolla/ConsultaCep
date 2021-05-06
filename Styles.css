@@ -72,6 +72,18 @@ input[type=number] {
     transition: 1s;
     box-shadow: 0 0 20px #00B4D8;
 }
+.boxTable{
+    display: none;
+    width: 100%;
+    padding:20px 0px 30px 0px;
+}
+
+.labelTable{
+    font-size: 26px;
+}
+.trStyle{
+    border-bottom:1px solid black ;
+}
 @media screen and (max-width:430px){
     [box-Input-Button]{
         flex-direction: column;
@@ -80,13 +92,17 @@ input[type=number] {
         margin: 0px;
         margin-bottom: 10px;
     }
+    .labelTable{
+        font-size: 20px;
+    }
 }
+
 footer{
     width: 100%;
     height: 150px;
     background:#2b2b2b;
     position: absolute;
-    bottom: 0px;
+    top: 100%;
 }
 footer  i {
     color:white;
