@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/30c4adbfaf.js" crossorigin="anonymous"></script>
     <link rel="shortcut icon" href="~/favicon.ico">
     <link rel="stylesheet" href="Styles.css">
@@ -30,9 +31,13 @@
             </form>
         </div>
     </div>
-    <div id="boxTable" class="boxTable Flex Flex-Center">
+    <div id="boxTable" class="boxTable Flex Flex-Center Flex-Column">
+        <div class="boxTituloInfos Flex Flex-Center">
+            <h1 class="Quicksand">
+                INFORMAÇÕES
+            </h1>
+        </div>
         <table id="tableResult" class="table">
-            
         </table>
     </div>  
     <footer id='footer' class="Flex Flex-Row Flex-Center">
@@ -52,28 +57,32 @@
             method:'GET',
             contentType:'application/json',
             success: function(response){
-                document.getElementById("footer").style.position = 'relative';
-
-                $('#boxTable').show();
-                $('#boxTable').css('display','flex')
-
-                $.each(response,function(key,item){
-                    $('#tableResult').append(
-                        `<tr tr-styles>
-                            <td>
-                                <label class="labelTable">${key.toString().toUpperCase()}</label>
-                            </td>
-                            <td>
-                                <label class="labelTable">${item}</label>
-                            </td>
-                        </tr>`)
-                })
-                
+                setFooterRlativePosition()
+                showBoxTable();
+                $.each(response,(key,item) => {$('#tableResult').append(getTrTextHtml(key,item))})
             },
-            error:function(response){
+            error: function(response){
                 console.log(response)
             }
         })
     })  
+
+    function showBoxTable(){
+        $('#boxTable').show();
+        $('#boxTable').css('display','flex');
+    }
+    function setFooterRlativePosition(){
+        document.getElementById("footer").style.position = 'relative';
+    }
+    function getTrTextHtml(key,item){
+        return  `<tr>
+                    <td class="tdStyle">
+                        <label class="labelTable">${key.toString().toUpperCase()}</label>
+                    </td>
+                    <td class="tdStyle">
+                        <label class="labelTable">${item}</label>    
+                    </td>
+                </tr>`
+    }
 </script>
 </html>
