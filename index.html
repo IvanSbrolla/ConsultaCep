@@ -1,17 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
     <title>ConsultaCep</title>
+    <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="initial-scale=1.0, width=device-width" />
+    <!-- import google fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap" rel="stylesheet">
+    <!-- import icons -->
     <script src="https://kit.fontawesome.com/30c4adbfaf.js" crossorigin="anonymous"></script>
     <link rel="shortcut icon" href="~/favicon.ico">
+    <!-- import css's -->
     <link rel="stylesheet" href="Styles.css">
+    <!-- other imports -->
     <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
+    <script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" type="text/javascript" charset="utf-8"></script>
+    <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
 </head>
+
 <body>
     <nav>
         <div class=" Flex Flex-Center boxNav">
@@ -25,7 +37,8 @@
                     <i Icon-Localizacao class="fas fa-map-marker-alt fa-7x"></i>
                     <div box-Input-Button class="Flex Flex-Row">
                         <input id="txtCep" type="number" placeholder="Insira o CEP">
-                        <button id="btnConsultarCep" class="button" type="submit" value="Consultar"> Consultar <i class="fas fa-search"></i></button>
+                        <button id="btnConsultarCep" class="button" type="submit" value="Consultar"> Consultar
+                            <i class="fas fa-search"></i></button>
                     </div>
                 </div>
             </form>
@@ -39,43 +52,52 @@
         </div>
         <table id="tableResult" class="table">
         </table>
-    </div>  
+    </div>
+    <div id="mapContainer" class="boxMap">
+    </div>
     <footer id='footer' class="Flex Flex-Row Flex-Center">
         <a><i icon-margin class="fab fa-github fa-6x"></i></a>
         <a><i class="fab fa-instagram fa-6x"></i></a>
     </footer>
 </body>
 <script>
-    
-    $('#btnConsultarCep').on('click',(e) => {
+
+    $('#btnConsultarCep').on('click', (e) => {
         e.preventDefault()
         $.ajax({
-            url:'/ConsultCep',
-            data:{
+            url: '/ConsultCep',
+            data: {
                 cep: $('#txtCep').val()
             },
-            method:'GET',
-            contentType:'application/json',
-            success: function(response){
+            method: 'GET',
+            contentType: 'application/json',
+            success: function (response) {
                 setFooterRlativePosition()
-                showBoxTable();
-                $.each(response,(key,item) => {$('#tableResult').append(getTrTextHtml(key,item))})
+                showElement('boxTable');
+                setElementDisplayFlex('boxTable');
+                showElement('boxMap');
+
+                $.each(response, (key, item) => { $('#tableResult').append(getTrTextHtml(key, item)) })
+                console.log(response)
+                loadMap(response.logradouro, response.localidade)
             },
-            error: function(response){
+            error: function (response) {
                 console.log(response)
             }
         })
-    })  
+    })
 
-    function showBoxTable(){
-        $('#boxTable').show();
-        $('#boxTable').css('display','flex');
+    function showElement(idElement) {
+        $(`#${idElement}`).show();
     }
-    function setFooterRlativePosition(){
+    function setElementDisplayFlex(idElement) {
+        $(`#${idElement}`).css('display', 'flex');
+    }
+    function setFooterRlativePosition() {
         document.getElementById("footer").style.position = 'relative';
     }
-    function getTrTextHtml(key,item){
-        return  `<tr>
+    function getTrTextHtml(key, item) {
+        return `<tr>
                     <td class="tdStyle">
                         <label class="labelTable">${key.toString().toUpperCase()}</label>
                     </td>
@@ -84,5 +106,58 @@
                     </td>
                 </tr>`
     }
+    function loadMap(logradouro, cidade) {
+        var platform = new H.service.Platform({
+            'apikey': 'aE2IlRuV5Kh_h2WFoMJ9D2BxS_i4BjgJJvm81ELmX5o'
+        });
+
+        // Get default map types from the platform object:
+        var defaultLayers = platform.createDefaultLayers();
+
+        // Instantiate (and display) a map object:
+        var map = new H.Map(
+            document.getElementById('mapContainer'),
+            defaultLayers.vector.normal.map,
+            {
+                zoom: 18,
+                center: { lat: 52.5, lng: 13.4 }
+            });
+
+        // Create the parameters for the geocoding request:
+        var geocodingParams = {
+            searchText: `${logradouro}, ${cidade}, Brazil`
+        };
+
+        // Define a callback function to process the geocoding response:
+        var onResult = function (result) {
+            var locations = result.Response.View[0].Result,
+                position,
+                marker;
+            // Add a marker for each location found
+            for (i = 0; i < locations.length; i++) {
+                position = {
+                    lat: locations[i].Location.DisplayPosition.Latitude,
+                    lng: locations[i].Location.DisplayPosition.Longitude
+                };
+                map.setCenter(position);
+                marker = new H.map.Marker(position);
+                map.addObject(marker);
+            }
+        };
+
+        // Get an instance of the geocoding service:
+        var geocoder = platform.getGeocodingService();
+
+        // Call the geocode method with the geocoding parameters,
+        // the callback and an error callback function (called if a
+        // communication error occurs):
+        geocoder.geocode(geocodingParams, onResult, function (e) {
+            alert(e);
+        });
+
+        // Create the default UI:
+        var ui = H.ui.UI.createDefault(map, defaultLayers, 'pt-BR');
+    }
 </script>
+
 </html>
