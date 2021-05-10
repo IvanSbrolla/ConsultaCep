@@ -76,6 +76,12 @@ input[type=number] {
     transition: 1s;
     box-shadow: 0 0 20px #00B4D8;
 }
+[box-Input-Button] label{
+    display: none;
+    margin-right: 10px;
+    margin-top: 5px;
+    color: red;
+}
 .boxTable{
     display: none;
     width: 100%;
@@ -116,7 +122,7 @@ input[type=number] {
     [box-Input-Button]{
         flex-direction: column;
     }
-    [box-Input-Button] > input{
+    [box-Input-Button]  input{
         margin: 0px;
         margin-bottom: 10px;
     }
@@ -125,6 +131,7 @@ input[type=number] {
     }
 }
 .boxMap{
+    display: none;
     width: 100%;
     height: 300px;
     margin-top: 30px;

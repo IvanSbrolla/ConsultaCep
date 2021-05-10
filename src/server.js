@@ -6,11 +6,17 @@ app.listen(8080, () => console.log('server ON!'));
 
 app.use(express.static('./.'));
 
-app.get('/ConsultarCep',(req,res) => {
-    const cep = req.query.cep;
-    getAddress(cep).then(x => res.send(x.data));
-    })
+app.get('/ConsultarCep', (req, res) => {
+    try {
+        const cep = req.query.cep;
+        getAddress(cep).then(x => res.send(x.data));
+    }
+    catch (exception) {
+        return exception
+    }
 
-async function getAddress(cep){
+})
+
+async function getAddress(cep) {
     return await axios.get(`https://viacep.com.br/ws/${cep}/json/unicode/`)
 }

@@ -37,7 +37,10 @@
                 <div class="Flex Flex-Column Flex-Center">
                     <i Icon-Localizacao class="fas fa-map-marker-alt fa-7x"></i>
                     <div box-Input-Button class="Flex Flex-Row">
-                        <input id="txtCep" placeholder="Insira o CEP">
+                        <div class="Flex Flex-Column">
+                            <input id="txtCep" placeholder="Insira o CEP">
+                            <label id="errorCep">*Não foi possivel consultar informações!*</label>
+                        </div>
                         <button id="btnConsultarCep" class="button" type="submit" value="Consultar"> Consultar
                             <i class="fas fa-search"></i></button>
                     </div>
@@ -51,10 +54,10 @@
                 INFORMAÇÕES
             </h1>
         </div>
-        <table id="tableResult" class="table">
+        <table id="tableCepInfos" class="table">
         </table>
     </div>
-    <div id="mapContainer" class="boxMap">
+    <div id="boxMap" class="boxMap">
     </div>
     <footer id='footer' class="Flex Flex-Row Flex-Center">
         <a><i icon-margin class="fab fa-github fa-6x"></i></a>
@@ -68,6 +71,12 @@
 
     $('#btnConsultarCep').on('click', (e) => {
         e.preventDefault();
+        disableButtonTemporarily();
+        clearElement('tableCepInfos');
+        clearElement('boxMap');
+        hideElement('boxTable');
+        hideElement('boxMap');
+        resetFooterDefinitions();
         ajaxConsultarCep();
     })
     function ajaxConsultarCep() {
@@ -80,15 +89,21 @@
             method: 'GET',
             contentType: 'application/json',
             success: function (response) {
-                setFooterRlativePosition()
-                showElement('boxTable');
-                setElementDisplayFlex('boxTable');
-                showElement('boxMap');
-                fillTableOfCep(response)
-                loadMap(response.logradouro, response.localidade)
+                if (response.erro) {
+                    showElement('errorCep');
+                }
+                else {
+                    hideElement('errorCep');
+                    showElement('boxTable');
+                    showElement('boxMap');
+                    setFooterRlativePosition()
+                    setElementDisplayFlex('boxTable');
+                    fillTableOfCep(response)
+                    loadMap(response.logradouro, response.localidade)
+                }
             },
             error: function (response) {
-
+                showElement('errorCep');
             }
         })
     }
@@ -101,11 +116,21 @@
     function showElement(idElement) {
         $(`#${idElement}`).show();
     }
+    function hideElement(idElement) {
+        $(`#${idElement}`).hide();
+    }
+    function clearElement(idElement) {
+        $(`#${idElement}`).html('');
+    }
     function setElementDisplayFlex(idElement) {
         $(`#${idElement}`).css('display', 'flex');
     }
+    function resetFooterDefinitions() {
+        $('footer').css('position', 'absolute');
+        $('footer').css('top', '100%')
+    }
     function fillTableOfCep(response) {
-        $.each(response, (key, item) => { $('#tableResult').append(getTrTextHtml(key, item)) })
+        $.each(response, (key, item) => { $('#tableCepInfos').append(getTrTextHtml(key, item)) })
     }
     function getTrTextHtml(key, item) {
         return `<tr>
@@ -117,6 +142,13 @@
                     </td>
                 </tr>`
     }
+    function disableButtonTemporarily() {
+        $('#btnConsultarCep').attr('disabled', 'true');
+        setTimeout(() => {
+            $('#btnConsultarCep').removeAttr('disabled');
+            console.log('5seg')
+        }, 5000);
+    }
     function loadMap(logradouro, cidade) {
         var platform = new H.service.Platform({
             'apikey': 'aE2IlRuV5Kh_h2WFoMJ9D2BxS_i4BjgJJvm81ELmX5o'
@@ -127,7 +159,7 @@
 
         // Instantiate (and display) a map object:
         var map = new H.Map(
-            document.getElementById('mapContainer'),
+            document.getElementById('boxMap'),
             defaultLayers.vector.normal.map,
             {
                 zoom: 18,
