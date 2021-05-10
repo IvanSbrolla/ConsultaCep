@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="Styles.css">
     <!-- other imports -->
     <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="node_modules/jquery-mask-plugin/src/jquery.mask.js"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" type="text/javascript" charset="utf-8"></script>
     <script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" type="text/javascript" charset="utf-8"></script>
@@ -36,7 +37,7 @@
                 <div class="Flex Flex-Column Flex-Center">
                     <i Icon-Localizacao class="fas fa-map-marker-alt fa-7x"></i>
                     <div box-Input-Button class="Flex Flex-Row">
-                        <input id="txtCep" type="number" placeholder="Insira o CEP">
+                        <input id="txtCep" placeholder="Insira o CEP">
                         <button id="btnConsultarCep" class="button" type="submit" value="Consultar"> Consultar
                             <i class="fas fa-search"></i></button>
                     </div>
@@ -61,13 +62,20 @@
     </footer>
 </body>
 <script>
+    $(document).ready(function () {
+        $('#txtCep').mask("00000-000");
+    })
 
     $('#btnConsultarCep').on('click', (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        ajaxConsultarCep();
+    })
+    function ajaxConsultarCep() {
+        const inputValue = getValueInputAndRemoveHyphen('#txtCep');
         $.ajax({
-            url: '/ConsultCep',
+            url: '/ConsultarCep',
             data: {
-                cep: $('#txtCep').val()
+                cep: inputValue
             },
             method: 'GET',
             contentType: 'application/json',
@@ -76,25 +84,28 @@
                 showElement('boxTable');
                 setElementDisplayFlex('boxTable');
                 showElement('boxMap');
-
-                $.each(response, (key, item) => { $('#tableResult').append(getTrTextHtml(key, item)) })
-                console.log(response)
+                fillTableOfCep(response)
                 loadMap(response.logradouro, response.localidade)
             },
             error: function (response) {
-                console.log(response)
+
             }
         })
-    })
-
+    }
+    function getValueInputAndRemoveHyphen(inputId) {
+        return $(inputId).val().replace('-', '')
+    }
+    function setFooterRlativePosition() {
+        document.getElementById("footer").style.position = 'relative';
+    }
     function showElement(idElement) {
         $(`#${idElement}`).show();
     }
     function setElementDisplayFlex(idElement) {
         $(`#${idElement}`).css('display', 'flex');
     }
-    function setFooterRlativePosition() {
-        document.getElementById("footer").style.position = 'relative';
+    function fillTableOfCep(response) {
+        $.each(response, (key, item) => { $('#tableResult').append(getTrTextHtml(key, item)) })
     }
     function getTrTextHtml(key, item) {
         return `<tr>
@@ -157,6 +168,7 @@
 
         // Create the default UI:
         var ui = H.ui.UI.createDefault(map, defaultLayers, 'pt-BR');
+
     }
 </script>
 

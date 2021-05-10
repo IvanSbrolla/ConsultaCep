@@ -6,7 +6,7 @@ app.listen(8080, () => console.log('server ON!'));
 
 app.use(express.static('./.'));
 
-app.get('/ConsultCep',(req,res) => {
+app.get('/ConsultarCep',(req,res) => {
     const cep = req.query.cep;
     getAddress(cep).then(x => res.send(x.data));
     })
