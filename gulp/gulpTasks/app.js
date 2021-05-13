@@ -5,16 +5,17 @@ const uglifyCss = require('gulp-uglifycss');
 const uglifyJs = require('gulp-uglify');
 const sass = require('gulp-dart-sass');
 const htmlMin = require('gulp-htmlmin');
-const htmlmin = require('gulp-htmlmin');
+const strip = require('gulp-strip-comments')
 
 function appHtml() {
     return gulp.src('../build/html/*.html')
-        .pipe(htmlmin({ collapseWhitespace: true }))
+        .pipe(htmlMin({ collapseWhitespace: true }))
         .pipe(gulp.dest('../root'))
 }
 function appJs() {
     return gulp.src('../build/JavaScript/*.js')
-        .pipe(uglifyJs({ "uglyComments": true }))
+        .pipe(uglifyJs())
+        .pipe(strip())
         .pipe(concat('scripts.min.js'))
         .pipe(gulp.dest('../root/JavaScript'))
 }

@@ -65,14 +65,14 @@ input[type=number] {
     margin-right: 20px;
     text-align: center;
 }
-.testeicon{
-    color: #00B4D8!important;
+.icon{
+    color: #00B4D8;
     margin-bottom: 50px;
     border:2px solid #00B4D8;
     padding:30px 40px;
     border-radius:50%;
 }
-[Form-ConsultaCep] i[Icon-Localizacao]:hover{
+.icon:hover{
     transition: 1s;
     box-shadow: 0 0 20px #00B4D8;
 }
@@ -146,13 +146,14 @@ footer{
     position: absolute;
     top: 100%;
 }
-footer  i {
+.footer-icon {
     color:white;
 }
-footer  i[icon-margin]{
-    margin-right: 20px;
-}
-footer  i:hover {
+.footer-icon:hover {
     transition: 1s;
     box-shadow: 0 25px 20px -20px #00B4D8;
 }
+.footer-icon-margin{
+    margin-right: 20px;
+}
+

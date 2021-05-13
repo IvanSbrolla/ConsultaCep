@@ -2,9 +2,9 @@ const express = require('express');
 const axios = require('axios');
 const app = express();
 
-app.listen(8080, () => console.log('server ON!'));
+app.listen(8080, () => console.log(__dirname+'/../'));
 
-app.use(express.static('./.'));
+app.use(express.static(__dirname+'/../'));
 
 app.get('/ConsultarCep', (req, res) => {
     try {

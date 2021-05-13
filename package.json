@@ -2,7 +2,7 @@
   "name": "ConsultaCep-JS",
   "version": "1.0.0",
   "description": "",
-  "main": "src/server.js",
+  "main": "./root/src/server.js",
   "scripts": {
     "start": "nodemon"
   },
