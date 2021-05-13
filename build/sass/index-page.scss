@@ -1,10 +1,3 @@
-body{
-    margin: 0px;
-    font-family: 'Roboto', sans-serif;
-}
-.Quicksand{
-    font-family: 'Quicksand', sans-serif;
-}
 input{
     outline: none;
 }
@@ -17,31 +10,12 @@ input[type=number] {
     appearance: textfield;
  
  }
-.Flex{
-    display: flex;
-}
-.Flex-Center{
-    justify-content: center;
-    align-items: center;
-}
-.Flex-Column{
-    flex-direction: column;
-}
-.FLex-Row{
-    flex-direction: row;
-}
+
 .box-All{
     padding: 40px 20px;
     position:relative;
 }
-.boxNav{
-    background:#03045E;
-    width: 100%;
-    height: 80px;
-}
-.boxNav > img {
-    height: 100%;
-}
+
 .button{
     padding: 7px 20px;
     background:white;
@@ -65,14 +39,14 @@ input[type=number] {
     margin-right: 20px;
     text-align: center;
 }
-[Form-ConsultaCep] i[Icon-Localizacao]{
-    color: #00B4D8!important;
+.icon{
+    color: #00B4D8;
     margin-bottom: 50px;
     border:2px solid #00B4D8;
     padding:30px 40px;
     border-radius:50%;
 }
-[Form-ConsultaCep] i[Icon-Localizacao]:hover{
+.icon:hover{
     transition: 1s;
     box-shadow: 0 0 20px #00B4D8;
 }
@@ -129,30 +103,4 @@ input[type=number] {
     .labelTable{
         font-size: 20px;
     }
-}
-.boxMap{
-    display: none;
-    width: 100%;
-    height: 300px;
-    margin-top: 30px;
-    margin-bottom: 30px;
-    border-top: 2px solid black;
-    border-bottom: 2px solid black;
-}
-footer{
-    width: 100%;
-    height: 150px;
-    background:#2b2b2b;
-    position: absolute;
-    top: 100%;
-}
-footer  i {
-    color:white;
-}
-footer  i[icon-margin]{
-    margin-right: 20px;
-}
-footer  i:hover {
-    transition: 1s;
-    box-shadow: 0 25px 20px -20px #00B4D8;
 }

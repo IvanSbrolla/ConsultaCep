@@ -1,1 +1,11 @@
-@import 'teste';
+@import 'flex-config';
+@import 'fontes';
+@import 'footer';
+@import 'index-page';
+@import 'map';
+@import 'menu';
+
+body{
+    margin: 0px;
+    font-family: 'Roboto', sans-serif;
+}
